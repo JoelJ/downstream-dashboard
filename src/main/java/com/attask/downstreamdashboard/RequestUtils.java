@@ -36,11 +36,6 @@ public class RequestUtils {
 		return Arrays.asList(parameterValues);
 	}
 
-	@NotNull
-	public static List<String> getParameters(@NotNull StaplerRequest currentRequest, @NotNull String name) {
-		return getParameters(currentRequest, name, Collections.<String>emptyList());
-	}
-
 	public static int getParameter(@NotNull StaplerRequest currentRequest, @NotNull String name, int defaultValue) {
 		String parameter = getParameter(currentRequest, name);
 		if(parameter == null) {

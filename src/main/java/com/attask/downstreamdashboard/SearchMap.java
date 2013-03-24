@@ -5,7 +5,6 @@ import hudson.scm.ChangeLogSet;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * User: Joel Johnson
