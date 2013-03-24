@@ -103,7 +103,10 @@
 }
 
 #downstream-dashboard .table .run.running-true .building-indicator {
+	background-repeat: no-repeat;
+	background-size: contain;
 	position: absolute;
+
 	bottom: 5px;
 	right: 5px;
 	width: 12px;

@@ -4,6 +4,12 @@
 	<script src="${rootURL}/plugin/downstream-dashboard/scripts/angular.min.js"><!--empty--></script>
 	<script src="${rootURL}/plugin/downstream-dashboard/scripts/downstreamDashboard.js"><!--empty--></script>
 
+	<style>
+		#downstream-dashboard .table .run.running-true .building-indicator {
+			background-image: url('${resURL}/images/16x16/clock.png');
+		}
+	</style>
+
 	<j:set var="views" value="${it.owner.views}"/>
 	<j:set var="currentView" value="${it}"/>
 	<st:include page="viewTabs.jelly" it="${it.owner.viewsTabBar}"/>
