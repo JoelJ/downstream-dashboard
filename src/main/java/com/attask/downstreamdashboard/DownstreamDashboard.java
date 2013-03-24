@@ -145,6 +145,9 @@ public class DownstreamDashboard extends View {
 		}
 	}
 
+	/**
+	 * The job that is being displays and queried for downstream jobs.
+	 */
 	@Exported
 	public String getJobName() {
 		return jobName;
@@ -154,6 +157,9 @@ public class DownstreamDashboard extends View {
 		this.jobName = jobName;
 	}
 
+	/**
+	 * The default size of the list being returned if none is specified in the request.
+	 */
 	@Exported
 	public int getDefaultSize() {
 		return defaultSize;
@@ -163,6 +169,12 @@ public class DownstreamDashboard extends View {
 		this.defaultSize = defaultSize;
 	}
 
+	/**
+	 * The value used in the API queries as the 'tree' parameter.
+	 * This lets the user define how much data to collect from the server without blasting the results with depth.
+	 *
+	 * TODO: actually implement this feature
+	 */
 	@Exported
 	public String getTreeQuery() {
 		return treeQuery;

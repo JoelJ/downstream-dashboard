@@ -9,6 +9,9 @@ import java.io.Serializable;
 import java.util.*;
 
 /**
+ * Represents a build and it's downstream jobs.
+ * Keeps the insertion order of runs, so they should all be in triggered-order.
+ *
  * User: Joel Johnson
  * Date: 3/23/13
  * Time: 4:52 PM

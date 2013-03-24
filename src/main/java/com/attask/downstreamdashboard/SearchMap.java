@@ -7,6 +7,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 /**
+ * Indexes projects by their revision history, project name, and parameters.
+ * To index new values, call {@link #populate(hudson.model.AbstractProject)} with the project that's being indexed.
+ * Individual runs are only scanned and indexed once. Multiple calls to {@link #populate(hudson.model.AbstractProject)} will only index builds since the last run.
+ * No hard references are kept, so projects and runs can still be GC'd when they're supposed to be, but the index will still remain.
+ *
  * User: Joel Johnson
  * Date: 3/23/13
  * Time: 3:15 PM

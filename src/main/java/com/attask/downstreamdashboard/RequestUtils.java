@@ -5,10 +5,11 @@ import org.jetbrains.annotations.Nullable;
 import org.kohsuke.stapler.StaplerRequest;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
+ * Make it easier to get parameters from requests with default values if it doesn't exist.
+ *
  * User: Joel Johnson
  * Date: 3/23/13
  * Time: 2:39 PM
