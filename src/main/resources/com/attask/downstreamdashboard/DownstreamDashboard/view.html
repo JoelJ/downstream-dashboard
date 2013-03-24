@@ -3,9 +3,6 @@
 		<div class="table" ng-repeat="table in data.tables">
 			<h1>{{data.name}}</h1>
 
-			<div class="search">
-				<input type="text" name="search" ng-model="search" ng-change="setSearch(value)"/>
-			</div>
 			<div ng-repeat="run in table.runs" class="row">
 				<div class="run {{run.result}} running-{{run.building}}">
 					<a href="{{run.url}}" class="fullDisplayName">{{run.fullDisplayName}}</a>

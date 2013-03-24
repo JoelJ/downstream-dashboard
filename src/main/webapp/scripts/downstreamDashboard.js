@@ -48,22 +48,6 @@ function TableControl($scope, $http, $location) {
 		}
 	};
 
-	$scope.setSearch = function(value) {
-		if($scope.pendingSearchTimeout) {
-			clearTimeout($scope.pendingSearchTimeout);
-		}
-
-		$scope.pendingSearchTimeout = setTimeout(function() {
-			$scope.cancelUpdate();
-			if(!$scope.search) {
-				$scope.search = null;
-			}
-			$location.replace();
-			$location.search('search', $scope.search);
-			$scope.loadTable();
-		}, 1000);
-	};
-
 	$scope.autoRefresh = !location.search.match("disableAutoRefresh=true");
 	$scope.toggleAutoRefresh = function() {
 		if($scope.autoRefresh) {
