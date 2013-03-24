@@ -1,0 +1,185 @@
+#viewList {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	background-color: black;
+}
+
+#viewList * {
+	background-color: black !important;
+	color: white !important;
+}
+
+#viewList .active {
+	background-color: #333 !important;
+	color: #EEE !important;
+	font-weight: normal !important;
+	font-size: 1.2em;
+}
+
+#side-panel {
+	display: none;
+}
+
+#downstream-dashboard {
+	left: 0;
+	right: 0;
+	top: 32px;
+	min-height: 100%;
+
+	background-color: white;
+	background-image: url('http://images4.wikia.nocookie.net/__cb20100514134207/starwars/images/c/c3/MCQ-cloudcity.jpg');
+	background-attachment: fixed;
+	position: absolute;
+	z-index: 1000;
+}
+
+#downstream-dashboard .table {
+	background-color: rgba(0, 0, 0, .5);
+	border-radius: 10px;
+
+	padding-top: 15px;
+	padding-bottom: 35px;
+	padding-left: 50px;
+	padding-right: 50px;
+
+	margin-top: 25px;
+	margin-bottom: 25px;
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 80%;
+}
+
+#downstream-dashboard .table h1 {
+	color: #FFF
+}
+
+#downstream-dashboard .table .run {
+	background-color: white;
+	border: 1px solid black;
+	border-radius: 3px;
+	display: inline-block;
+	height: 50px;
+	padding: 4px;
+	margin: 2px;
+	width: 120px;
+}
+
+#downstream-dashboard .table .row {
+	border-bottom: 1px dotted white;
+	margin-top: 3px;
+	padding-bottom: 3px;
+}
+
+#downstream-dashboard .table .row:last-child {
+	border-bottom: none;
+}
+
+#downstream-dashboard .table .run .failures,
+#downstream-dashboard .table .run .fullDisplayName {
+	display: inline-block;
+	width: 100%;
+	text-align: center;
+	text-decoration: none;
+}
+
+#downstream-dashboard .table .run .failures:hover,
+#downstream-dashboard .table .run .fullDisplayName:hover {
+	text-decoration: underline;
+}
+
+#downstream-dashboard .table .run .fullDisplayName {
+	font-weight: 700;
+	text-decoration: underline;
+}
+
+#downstream-dashboard .table .run {
+	position: relative;
+}
+
+#downstream-dashboard .table .run.running-false .building-indicator {
+	display: none;
+}
+
+#downstream-dashboard .table .run.running-true .building-indicator {
+	position: absolute;
+	bottom: 5px;
+	right: 5px;
+	width: 12px;
+	height: 12px;
+	z-index: 1050;
+}
+
+#downstream-dashboard .table .run {
+	background: #ffffff; /* Old browsers */
+	background: -moz-radial-gradient(center, ellipse cover,  #ffffff 70%, #afafaf 100%);
+	background: -webkit-radial-gradient(center, ellipse cover,  #ffffff 70%,#afafaf 100%);
+	background: radial-gradient(ellipse at center,  #ffffff 70%,#afafaf 100%); /* W3C */
+}
+
+#downstream-dashboard .table .run:hover {
+	border-color: #afafaf;
+	box-shadow: 0px 0px 15px 5px #afafaf;
+	z-index: 1100;
+
+	background: #ffffff; /* Old browsers */
+	background: -moz-radial-gradient(center, ellipse cover,  #ffffff 60%, #afafaf 100%);
+	background: -webkit-radial-gradient(center, ellipse cover,  #ffffff 60%,#afafaf 100%);
+	background: radial-gradient(ellipse at center,  #ffffff 60%,#afafaf 100%); /* W3C */
+}
+
+#downstream-dashboard .table .run.FAILURE {
+	background: #ffffff; /* Old browsers */
+	background: -moz-radial-gradient(center, ellipse cover,  #ffffff 70%, #ff1c1c 100%);
+	background: -webkit-radial-gradient(center, ellipse cover,  #ffffff 70%,#ff1c1c 100%);
+	background: radial-gradient(ellipse at center,  #ffffff 70%,#ff1c1c 100%);
+}
+
+#downstream-dashboard .table .run.FAILURE:hover {
+	border-color: #ff1c1c;
+	box-shadow: 0px 0px 15px 5px #ff1c1c;
+
+	background: #ffffff; /* Old browsers */
+	background: -moz-radial-gradient(center, ellipse cover,  #ffffff 60%, #ff1c1c 100%);
+	background: -webkit-radial-gradient(center, ellipse cover,  #ffffff 60%,#ff1c1c 100%);
+	background: radial-gradient(ellipse at center,  #ffffff 60%,#ff1c1c 100%);
+}
+
+#downstream-dashboard .table .run.UNSTABLE {
+	background: #ffffff; /* Old browsers */
+	background: -moz-radial-gradient(center, ellipse cover,  #ffffff 70%, #ffb200 100%);
+	background: -webkit-radial-gradient(center, ellipse cover,  #ffffff 70%,#ffb200 100%);
+	background: radial-gradient(ellipse at center,  #ffffff 70%,#ffb200 100%);
+}
+
+#downstream-dashboard .table .run.UNSTABLE:hover {
+	border-color: #ffb200;
+	box-shadow: 0px 0px 15px 5px #ffb200;
+
+	background: #ffffff; /* Old browsers */
+	background: -moz-radial-gradient(center, ellipse cover,  #ffffff 60%, #ffb200 100%);
+	background: -webkit-radial-gradient(center, ellipse cover,  #ffffff 60%,#ffb200 100%);
+	background: radial-gradient(ellipse at center,  #ffffff 60%,#ffb200 100%);
+}
+
+#downstream-dashboard .table .run.SUCCESS {
+	background: #ffffff; /* Old browsers */
+	background: -moz-radial-gradient(center, ellipse cover,  #ffffff 70%, #1cff1c 100%);
+	background: -webkit-radial-gradient(center, ellipse cover,  #ffffff 70%,#1cff1c 100%);
+	background: radial-gradient(ellipse at center,  #ffffff 70%,#1cff1c 100%);
+}
+
+#downstream-dashboard .table .run.SUCCESS:hover {
+	border-color: #1cff1c;
+	box-shadow: 0px 0px 15px 5px #1cff1c;
+
+	background: #ffffff; /* Old browsers */
+	background: -moz-radial-gradient(center, ellipse cover,  #ffffff 60%, #1cff1c 100%);
+	background: -webkit-radial-gradient(center, ellipse cover,  #ffffff 60%,#1cff1c 100%);
+	background: radial-gradient(ellipse at center,  #ffffff 60%,#1cff1c 100%);
+}
+
+#downstream-dashboard .table .run .failureCount {
+	visibility: hidden;
+}

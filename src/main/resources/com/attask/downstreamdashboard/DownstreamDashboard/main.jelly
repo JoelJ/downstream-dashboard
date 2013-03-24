@@ -1,0 +1,34 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+	<link rel="stylesheet" type="text/css" href="${rootURL}/plugin/downstream-dashboard/styles/downstream-dashboard.css"/>
+
+	<script src="${rootURL}/plugin/downstream-dashboard/scripts/angular.min.js"><!--empty--></script>
+	<script src="${rootURL}/plugin/downstream-dashboard/scripts/downstreamDashboard.js"><!--empty--></script>
+	<script>
+		<!--Global Variables-->
+		DownstreamDashboard = {
+			'treeQuery': '${it.treeQuery}'
+		}
+	</script>
+
+	<j:set var="views" value="${it.owner.views}"/>
+	<j:set var="currentView" value="${it}"/>
+	<st:include page="viewTabs.jelly" it="${it.owner.viewsTabBar}"/>
+
+	<div id="downstream-dashboard" ng-app="">
+		<div class="table" ng-controller="TableControl">
+			<h1>{{table.name}}</h1>
+			<div ng-repeat="run in table.runs" class="row">
+				<div class="run {{run.result}} running-{{run.building}}">
+					<a href="{{run.url}}" class="fullDisplayName">{{run.fullDisplayName}}</a>
+					<a href="{{run.url}}{{run.urlName}}" class="failures failureCount{{run.failCount}}">{{run.failCount}}/{{run.totalCount}}</a>
+					<img class="building-indicator" src="${resURL}/images/16x16/clock.png" />
+				</div>
+				<div ng-repeat="downstream in run.downstreamBuilds" class="run {{downstream.result}} running-{{run.building}}">
+					<a href="{{downstream.url}}" class="fullDisplayName">{{downstream.fullDisplayName}}</a>
+					<a href="{{downstream.url}}{{downstream.urlName}}" class="failures failureCount{{downstream.failCount}}">{{downstream.failCount}} failures</a>
+					<img class="building-indicator" src="${resURL}/images/16x16/clock.png" />
+				</div>
+			</div>
+		</div>
+	</div>
+</j:jelly>
