@@ -3,10 +3,7 @@ package com.attask.downstreamdashboard;
 import hudson.Extension;
 import hudson.model.*;
 import jenkins.model.Jenkins;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.Stapler;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.export.Exported;
@@ -14,7 +11,6 @@ import org.kohsuke.stapler.export.ExportedBean;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.util.*;
 
 /**
@@ -25,12 +21,15 @@ import java.util.*;
 @ExportedBean
 public class DownstreamDashboard extends View {
 	private static final String DEFAULT_TREE_QUERY = "";
+	private static final int DEFAULT_COUNT = 5;
+	private static final String DEFAULT_SEARCH_QUERY = "projectName=${jobName}";
 
-	private WeakReference<AbstractProject> projectWeakReference;
-	private volatile SearchMap searchMap;
 	private String jobName;
-	private int defaultSize;
+	private int count;
+	private String query;
 	private String treeQuery;
+
+	private transient volatile Map<String, Table> tables;
 
 	@DataBoundConstructor
 	public DownstreamDashboard(String name) {
@@ -42,9 +41,10 @@ public class DownstreamDashboard extends View {
 		String jobName = RequestUtils.getParameter(request, "_.jobName");
 		if(this.jobName == null || !this.jobName.equals(jobName)) {
 			setJobName(jobName);
-			searchMap = null;
+			tables = null; //We changed the project we're looking at. So we need to throw away the index.
 		}
-		setDefaultSize(RequestUtils.getParameter(request, "_.defaultSize", 50));
+		setCount(RequestUtils.getParameter(request, "_.count", DEFAULT_COUNT));
+		setQuery(RequestUtils.getParameter(request, "_.query", DEFAULT_SEARCH_QUERY));
 		setTreeQuery(RequestUtils.getParameter(request, "_.treeQuery", DEFAULT_TREE_QUERY));
 	}
 
@@ -54,69 +54,41 @@ public class DownstreamDashboard extends View {
 	@SuppressWarnings("UnusedDeclaration")
 	public void doInvalidate(StaplerRequest request, StaplerResponse response) {
 		checkPermission(View.DELETE);
-		searchMap = null;
+		tables = null;
 	}
 
 	@Exported
-	public List<Run> getRuns() {
-		StaplerRequest currentRequest = Stapler.getCurrentRequest();
-		int count = defaultSize;
-		List<String> search = Arrays.asList("projectName="+jobName);
-
-		if(currentRequest != null) {
-			search = RequestUtils.getParameters(currentRequest, "search", search);
-			count = RequestUtils.getParameter(currentRequest, "count", count);
-		}
-
-		SearchMap searchMap = getAndPopulateSearchMap(findProject());
-		Set<Run> searchResult = searchMap.search(search);
-		List<Run> result = new ArrayList<Run>();
-		Iterator<Run> iterator = searchResult.iterator();
-		for(int index = 0; iterator.hasNext() && index < count; index++) {
-			Run next = iterator.next();
-			result.add(next);
-		}
-		return result;
-	}
-
-	@NotNull
-	private SearchMap getAndPopulateSearchMap(@Nullable AbstractProject project) {
-		SearchMap searchMap = this.searchMap;
-
-		if(searchMap == null) {
+	public List<Table> getTables() {
+		Map<String, Table> tables = this.tables;
+		if(tables == null) {
 			synchronized (this) {
-				//noinspection ConstantConditions
-				if(searchMap == null) {
-					searchMap = new SearchMap();
-					this.searchMap = searchMap;
+				tables = this.tables;
+				if(tables == null) {
+					tables = new HashMap<String, Table>();
 				}
 			}
 		}
 
-		if(project != null) {
-			searchMap.populate(project);
-		}
-		return searchMap;
-	}
+		String jobName = this.jobName;
+		int count = this.count;
+		String query = this.query;
+		String treeQuery = this.treeQuery;
 
-	@Nullable
-	private AbstractProject findProject() {
-		AbstractProject result = null;
-		if(projectWeakReference != null) {
-			result = projectWeakReference.get();
-		}
-
-		// It's not a big deal to search for the project so we don't synchronize here.
-		if(result == null && getJobName() != null) {
-			AbstractProject nearest = AbstractProject.findNearest(getJobName());
-			if (nearest != null && nearest.getName().equals(getJobName())) {
-				projectWeakReference = new WeakReference<AbstractProject>(nearest);
-				result = nearest;
+		Table table = tables.get(jobName);
+		if(table == null) {
+			//noinspection SynchronizationOnLocalVariableOrMethodParameter
+			synchronized (tables) {
+				table = tables.get(jobName);
+				if(table == null) {
+					table = new Table(jobName, count, query, treeQuery);
+					tables.put(jobName, table);
+				}
 			}
 		}
 
-		return result;
+		return Arrays.asList(table);
 	}
+
 
 	@Override
 	public void onJobRenamed(Item item, String oldName, String newName) {
@@ -137,7 +109,7 @@ public class DownstreamDashboard extends View {
 
 	@Override
 	public Collection<TopLevelItem> getItems() {
-		AbstractProject project = findProject();
+		AbstractProject project = AbstractProject.findNearest(getJobName());
 		if(project instanceof TopLevelItem) {
 			return Arrays.asList((TopLevelItem) project);
 		} else {
@@ -161,12 +133,12 @@ public class DownstreamDashboard extends View {
 	 * The default size of the list being returned if none is specified in the request.
 	 */
 	@Exported
-	public int getDefaultSize() {
-		return defaultSize;
+	public int getCount() {
+		return count;
 	}
 
-	public void setDefaultSize(int defaultSize) {
-		this.defaultSize = defaultSize;
+	public void setCount(int count) {
+		this.count = count;
 	}
 
 	/**
@@ -185,8 +157,12 @@ public class DownstreamDashboard extends View {
 	}
 
 	@Exported
-	public String getResourceUrl() {
-		return Jenkins.RESOURCE_PATH;
+	public String getQuery() {
+		return query;
+	}
+
+	public void setQuery(String query) {
+		this.query = query;
 	}
 
 	@Extension

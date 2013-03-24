@@ -2,7 +2,15 @@
 	<f:entry title="Job" field="jobName">
 		<f:textbox/>
 	</f:entry>
-	<f:entry title="Default Size" field="defaultSize" default="5">
+	<f:entry title="Default Size" field="count" default="5">
+		<f:textbox/>
+	</f:entry>
+	<f:entry title="Search Query" field="query" default="projectName=${'$'}{jobName}">
+		<f:textbox/>
+	</f:entry>
+
+	<!--TODO: advanced-->
+	<f:entry title="Tree Query" field="treeQuery" default="">
 		<f:textbox/>
 	</f:entry>
 </j:jelly>

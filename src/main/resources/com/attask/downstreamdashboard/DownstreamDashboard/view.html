@@ -1,26 +1,31 @@
 <div id="downstream-dashboard" ng-app="">
-	<div class="table" ng-controller="TableControl">
-		<h1>{{table.name}}</h1>
-		<div class="search">
-			<input type="text" name="search" ng-model="search" ng-change="setSearch(value)"/>
-		</div>
-		<div ng-repeat="run in table.runs" class="row">
-			<div class="run {{run.result}} running-{{run.building}}">
-				<a href="{{run.url}}" class="fullDisplayName">{{run.fullDisplayName}}</a>
-				<a href="{{run.url}}{{run.urlName}}" class="failures failureCount{{run.failCount}}">{{run.failCount}}/{{run.totalCount}}</a>
-				<i class="building-indicator"></i>
+	<div ng-controller="TableControl">
+		<div class="table" ng-repeat="table in data.tables">
+			<h1>{{data.name}}</h1>
+
+			<div class="search">
+				<input type="text" name="search" ng-model="search" ng-change="setSearch(value)"/>
 			</div>
-			<div ng-repeat="downstream in run.downstreamBuilds" class="run {{downstream.result}} running-{{run.building}}">
-				<a href="{{downstream.url}}" class="fullDisplayName">{{downstream.fullDisplayName}}</a>
-				<a href="{{downstream.url}}{{downstream.urlName}}" class="failures failureCount{{downstream.failCount}}">{{downstream.failCount}} failures</a>
-				<i class="building-indicator"></i>
+			<div ng-repeat="run in table.runs" class="row">
+				<div class="run {{run.result}} running-{{run.building}}">
+					<a href="{{run.url}}" class="fullDisplayName">{{run.fullDisplayName}}</a>
+					<a href="{{run.url}}{{run.urlName}}" class="failures failureCount{{run.failCount}}">{{run.failCount}}/{{run.totalCount}}</a>
+					<i class="building-indicator"></i>
+				</div>
+				<div ng-repeat="downstream in run.downstreamBuilds"
+					 class="run {{downstream.result}} running-{{run.building}}">
+					<a href="{{downstream.url}}" class="fullDisplayName">{{downstream.fullDisplayName}}</a>
+					<a href="{{downstream.url}}{{downstream.urlName}}"
+					   class="failures failureCount{{downstream.failCount}}">{{downstream.failCount}} failures</a>
+					<i class="building-indicator"></i>
+				</div>
 			</div>
-		</div>
-		<div id="toolbar">
+			<div id="toolbar">
 			<span class="auto-refresh">
 				<input type="checkbox" ng-model="autoRefresh" ng-change="toggleAutoRefresh()"/>
 				Auto Refresh
 			</span>
+			</div>
 		</div>
 	</div>
 </div>

@@ -1,16 +1,23 @@
 function TableControl($scope, $http, $location) {
 	$scope.loadTable = function() {
 		$scope.nextUpdate = null;
-		var query = "?depth=3" + ($location.url().replace('?', '&'));
+		var query = "?depth=4" + ($location.url().replace('?', '&'));
 		var url = location.pathname + "api/json"+query;
 		console.log("requesting:", url);
 
 		$http.get(url).success( function( data ) {
-			$scope.table = data;
-			for(var runIndex = data.runs.length - 1; runIndex >= 0; runIndex--) {
-				var run = data.runs[runIndex];
-				if(run.actions) {
-					$scope.normalizeActions(run);
+			$scope.data = data;
+			if(data.tables) {
+				for(var tableIndex = data.tables.length - 1; tableIndex >= 0; tableIndex--) {
+					var table = data.tables[tableIndex];
+					if(table) {
+						for(var runIndex = table.runs.length - 1; runIndex >= 0; runIndex--) {
+							var run = table.runs[runIndex];
+							if(run.actions) {
+								$scope.normalizeActions(run);
+							}
+						}
+					}
 				}
 			}
 
