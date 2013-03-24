@@ -1,5 +1,6 @@
 function TableControl($scope, $http, $location) {
 	$scope.loadTable = function() {
+		$scope.nextUpdate = null;
 		var query = "?depth=3" + ($location.url().replace('?', '&'));
 		var url = location.pathname + "api/json"+query;
 		console.log("requesting:", url);
@@ -12,11 +13,14 @@ function TableControl($scope, $http, $location) {
 					$scope.normalizeActions(run);
 				}
 			}
-		});
 
-		if(!location.search.match("disableAutoRefresh=true")) {
-			$scope.nextUpdate = setTimeout($scope.loadTable, 10000);
-		}
+			if($scope.autoRefresh) {
+				console.log("scheduling auto refresh");
+				$scope.nextUpdate = setTimeout($scope.loadTable, 10000);
+			} else {
+				console.log("skipping auto refresh");
+			}
+		});
 	};
 
 	$scope.normalizeActions = function(run) {
@@ -38,14 +42,12 @@ function TableControl($scope, $http, $location) {
 	};
 
 	$scope.setSearch = function(value) {
-		if($scope.pendingTimeout) {
-			clearTimeout($scope.pendingTimeout);
+		if($scope.pendingSearchTimeout) {
+			clearTimeout($scope.pendingSearchTimeout);
 		}
 
-		$scope.pendingTimeout = setTimeout(function() {
-			if($scope.nextUpdate) {
-				clearTimeout($scope.nextUpdate);
-			}
+		$scope.pendingSearchTimeout = setTimeout(function() {
+			$scope.cancelUpdate();
 			if(!$scope.search) {
 				$scope.search = null;
 			}
@@ -53,6 +55,24 @@ function TableControl($scope, $http, $location) {
 			$location.search('search', $scope.search);
 			$scope.loadTable();
 		}, 1000);
+	};
+
+	$scope.autoRefresh = !location.search.match("disableAutoRefresh=true");
+	$scope.toggleAutoRefresh = function() {
+		if($scope.autoRefresh) {
+			console.log("enabling auto refresh");
+			$scope.loadTable();
+		} else {
+			console.log("disabling auto refresh");
+			$scope.cancelUpdate();
+		}
+	};
+
+	$scope.cancelUpdate = function() {
+		if($scope.nextUpdate) {
+			clearTimeout($scope.nextUpdate);
+			$scope.nextUpdate = null;
+		}
 	};
 
 	$scope.loadTable();

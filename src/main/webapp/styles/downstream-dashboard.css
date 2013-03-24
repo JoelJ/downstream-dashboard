@@ -186,3 +186,11 @@
 #downstream-dashboard .table .run .failureCount {
 	visibility: hidden;
 }
+
+#downstream-dashboard #toolbar {
+	color: white;
+	position: absolute;
+	top: 0;
+	right: 5px;
+	padding-right: 5px;
+}
