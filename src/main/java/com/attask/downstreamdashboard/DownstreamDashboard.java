@@ -184,6 +184,11 @@ public class DownstreamDashboard extends View {
 		this.treeQuery = treeQuery;
 	}
 
+	@Exported
+	public String getResourceUrl() {
+		return Jenkins.RESOURCE_PATH;
+	}
+
 	@Extension
 	public static final class DescriptorImpl extends ViewDescriptor {
 		@Override
