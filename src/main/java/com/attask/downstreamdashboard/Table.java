@@ -27,11 +27,11 @@ public class Table {
 	@NotNull private final String treeQuery;
 	private final int count;
 
-	public Table(@NotNull String jobName, int count, @NotNull String query, @NotNull String treeQuery) {
-		this.jobName = jobName;
-		this.count = count;
-		this.query = query;
-		this.treeQuery = treeQuery;
+	public Table(@NotNull TableConfiguration tableConfiguration) {
+		this.jobName = tableConfiguration.getJobName();
+		this.count = tableConfiguration.getCount();
+		this.query = tableConfiguration.getQuery();
+		this.treeQuery = tableConfiguration.getTreeQuery();
 	}
 
 	@Exported

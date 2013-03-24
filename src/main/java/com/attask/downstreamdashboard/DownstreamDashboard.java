@@ -24,12 +24,9 @@ public class DownstreamDashboard extends View {
 	private static final int DEFAULT_COUNT = 5;
 	private static final String DEFAULT_SEARCH_QUERY = "projectName=${jobName}";
 
-	private String jobName;
-	private int count;
-	private String query;
-	private String treeQuery;
+	private List<TableConfiguration> tableConfigurations;
 
-	private transient volatile Map<String, Table> tables;
+	private transient volatile Map<TableConfiguration, Table> tables;
 
 	@DataBoundConstructor
 	public DownstreamDashboard(String name) {
@@ -38,14 +35,17 @@ public class DownstreamDashboard extends View {
 
 	@Override
 	protected void submit(StaplerRequest request) throws IOException, ServletException, Descriptor.FormException {
+		List<TableConfiguration> tableConfigurations = new ArrayList<TableConfiguration>();
+
 		String jobName = RequestUtils.getParameter(request, "_.jobName");
-		if(this.jobName == null || !this.jobName.equals(jobName)) {
-			setJobName(jobName);
-			tables = null; //We changed the project we're looking at. So we need to throw away the index.
-		}
-		setCount(RequestUtils.getParameter(request, "_.count", DEFAULT_COUNT));
-		setQuery(RequestUtils.getParameter(request, "_.query", DEFAULT_SEARCH_QUERY));
-		setTreeQuery(RequestUtils.getParameter(request, "_.treeQuery", DEFAULT_TREE_QUERY));
+		int count = RequestUtils.getParameter(request, "_.count", DEFAULT_COUNT);
+		String query = RequestUtils.getParameter(request, "_.query", DEFAULT_SEARCH_QUERY);
+		String treeQuery = RequestUtils.getParameter(request, "_.treeQuery", DEFAULT_TREE_QUERY);
+		TableConfiguration configuration = new TableConfiguration(jobName, count, query, treeQuery);
+		tableConfigurations.add(configuration);
+
+		this.tableConfigurations = tableConfigurations;
+		tables = null;
 	}
 
 	/**
@@ -59,41 +59,49 @@ public class DownstreamDashboard extends View {
 
 	@Exported
 	public List<Table> getTables() {
-		Map<String, Table> tables = this.tables;
+		Map<TableConfiguration, Table> tables = this.tables;
 		if(tables == null) {
 			synchronized (this) {
 				tables = this.tables;
 				if(tables == null) {
-					tables = new HashMap<String, Table>();
+					tables = new HashMap<TableConfiguration, Table>();
+					this.tables = tables;
 				}
 			}
 		}
 
-		String jobName = this.jobName;
-		int count = this.count;
-		String query = this.query;
-		String treeQuery = this.treeQuery;
-
-		Table table = tables.get(jobName);
-		if(table == null) {
-			//noinspection SynchronizationOnLocalVariableOrMethodParameter
-			synchronized (tables) {
-				table = tables.get(jobName);
-				if(table == null) {
-					table = new Table(jobName, count, query, treeQuery);
-					tables.put(jobName, table);
+		List<Table> result = new ArrayList<Table>(tableConfigurations.size());
+		for (TableConfiguration tableConfiguration : tableConfigurations) {
+			Table table = tables.get(tableConfiguration);
+			if(table == null) {
+				//noinspection SynchronizationOnLocalVariableOrMethodParameter
+				synchronized (tables) {
+					table = tables.get(tableConfiguration);
+					if(table == null) {
+						table = new Table(tableConfiguration);
+						tables.put(tableConfiguration, table);
+					}
 				}
 			}
+			result.add(table);
 		}
 
-		return Arrays.asList(table);
+		return result;
 	}
 
 
 	@Override
 	public void onJobRenamed(Item item, String oldName, String newName) {
-		if(oldName != null && oldName.equals(getJobName())) {
-			setJobName(newName);
+		if(tables != null && oldName != null) {
+			for (TableConfiguration tableConfiguration : tableConfigurations) {
+				if(oldName.equals(tableConfiguration.getJobName())) {
+					tableConfiguration.setJobName(newName);
+					//noinspection SynchronizeOnNonFinalField
+					synchronized (tables) {
+						tables.remove(tableConfiguration);
+					}
+				}
+			}
 		}
 	}
 
@@ -109,60 +117,7 @@ public class DownstreamDashboard extends View {
 
 	@Override
 	public Collection<TopLevelItem> getItems() {
-		AbstractProject project = AbstractProject.findNearest(getJobName());
-		if(project instanceof TopLevelItem) {
-			return Arrays.asList((TopLevelItem) project);
-		} else {
-			return Collections.emptyList();
-		}
-	}
-
-	/**
-	 * The job that is being displays and queried for downstream jobs.
-	 */
-	@Exported
-	public String getJobName() {
-		return jobName;
-	}
-
-	public void setJobName(String jobName) {
-		this.jobName = jobName;
-	}
-
-	/**
-	 * The default size of the list being returned if none is specified in the request.
-	 */
-	@Exported
-	public int getCount() {
-		return count;
-	}
-
-	public void setCount(int count) {
-		this.count = count;
-	}
-
-	/**
-	 * The value used in the API queries as the 'tree' parameter.
-	 * This lets the user define how much data to collect from the server without blasting the results with depth.
-	 *
-	 * TODO: actually implement this feature
-	 */
-	@Exported
-	public String getTreeQuery() {
-		return treeQuery;
-	}
-
-	public void setTreeQuery(String treeQuery) {
-		this.treeQuery = treeQuery;
-	}
-
-	@Exported
-	public String getQuery() {
-		return query;
-	}
-
-	public void setQuery(String query) {
-		this.query = query;
+		return Collections.emptyList();
 	}
 
 	@Extension
