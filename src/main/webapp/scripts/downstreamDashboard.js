@@ -6,7 +6,6 @@ function TableControl($scope, $http, $location) {
 		console.log("requesting:", url);
 
 		$http.get(url).success( function( data ) {
-			$scope.data = data;
 			if(data.tables) {
 				for(var tableIndex = data.tables.length - 1; tableIndex >= 0; tableIndex--) {
 					var table = data.tables[tableIndex];
@@ -20,6 +19,7 @@ function TableControl($scope, $http, $location) {
 					}
 				}
 			}
+			$scope.data = data;
 
 			if($scope.autoRefresh) {
 				console.log("scheduling auto refresh");
