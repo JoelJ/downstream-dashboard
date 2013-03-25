@@ -1,37 +1,9 @@
-#viewList {
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	background-color: black;
-}
-
-#viewList * {
-	background-color: black !important;
-	color: white !important;
-}
-
-#viewList .active {
-	background-color: #333 !important;
-	color: #EEE !important;
-	font-weight: normal !important;
-	font-size: 1.2em;
-}
-
-#side-panel {
-	display: none;
-}
-
 #downstream-dashboard {
-	left: 0;
-	right: 0;
-	top: 32px;
-	min-height: 100%;
+	padding: 1px;
 
 	background-color: white;
 	background-image: url('http://images4.wikia.nocookie.net/__cb20100514134207/starwars/images/c/c3/MCQ-cloudcity.jpg');
 	background-attachment: fixed;
-	position: absolute;
 	z-index: 1000;
 }
 
@@ -44,7 +16,7 @@
 	padding-left: 40px;
 	padding-right: 40px;
 
-	margin-top: 25px;
+	margin-top: 15px;
 	margin-bottom: 25px;
 	margin-left: auto;
 	margin-right: auto;
@@ -192,7 +164,36 @@
 #downstream-dashboard #toolbar {
 	color: white;
 	position: absolute;
-	top: 0;
+	top: 5px;
 	right: 5px;
 	padding-right: 5px;
+}
+
+#viewList * {
+	background-color: black !important;
+	color: white !important;
+}
+
+#viewList .active {
+	background-color: #333 !important;
+	color: #EEE !important;
+	font-weight: normal !important;
+	font-size: 1.2em;
+}
+
+body {
+	background-color: black;
+	padding-top: 4px;
+}
+
+#main-panel {
+	padding: 0;
+}
+
+#view-message,
+#top-panel,
+#top-nav,
+#footer,
+#side-panel {
+	display: none;
 }
