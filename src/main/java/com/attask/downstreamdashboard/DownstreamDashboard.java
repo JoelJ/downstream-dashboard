@@ -20,11 +20,15 @@ import java.util.*;
  */
 @ExportedBean
 public class DownstreamDashboard extends View {
-	private static final String DEFAULT_TREE_QUERY = "";
+	private static final String DEFAULT_TREE_QUERY = " ";
 	private static final int DEFAULT_COUNT = 5;
 	private static final String DEFAULT_SEARCH_QUERY = "projectName=${jobName}";
 
-	private List<TableConfiguration> tableConfigurations;
+	private String jobNames;
+	private String counts;
+	private String queries;
+	private String treeQueries;
+	private transient List<TableConfiguration> tableConfigurations;
 
 	private transient volatile Map<TableConfiguration, Table> tables;
 
@@ -35,17 +39,63 @@ public class DownstreamDashboard extends View {
 
 	@Override
 	protected void submit(StaplerRequest request) throws IOException, ServletException, Descriptor.FormException {
-		List<TableConfiguration> tableConfigurations = new ArrayList<TableConfiguration>();
+		// Don't set these until we successfully populate the configurations.
+		// This is to prevent it a bad submit from getting all the fields out of sync
+		String jobNames = RequestUtils.getParameter(request, "_.jobNames");
+		String counts = RequestUtils.getParameter(request, "_.counts");
+		String queries = RequestUtils.getParameter(request, "_.queries");
+		String treeQueries = RequestUtils.getParameter(request, "_.treeQueries");
 
-		String jobName = RequestUtils.getParameter(request, "_.jobName");
-		int count = RequestUtils.getParameter(request, "_.count", DEFAULT_COUNT);
-		String query = RequestUtils.getParameter(request, "_.query", DEFAULT_SEARCH_QUERY);
-		String treeQuery = RequestUtils.getParameter(request, "_.treeQuery", DEFAULT_TREE_QUERY);
-		TableConfiguration configuration = new TableConfiguration(jobName, count, query, treeQuery);
-		tableConfigurations.add(configuration);
+		this.tableConfigurations = populateTableConfigurations(split(jobNames), split(counts), split(queries), split(treeQueries));
 
-		this.tableConfigurations = tableConfigurations;
-		tables = null;
+		// Success! Overwrite fields.
+		this.jobNames = jobNames;
+		this.counts = counts;
+		this.queries = queries;
+		this.treeQueries = treeQueries;
+	}
+
+	private static List<String> split(String toSplit) {
+		List<String> result = new ArrayList<String>();
+		if(toSplit != null && !toSplit.isEmpty()) {
+			Scanner scanner = new Scanner(toSplit);
+			while(scanner.hasNextLine()) {
+				String line = scanner.nextLine();
+				result.add(line);
+			}
+		}
+		return result;
+	}
+
+	private List<TableConfiguration> populateTableConfigurations(List<String> jobNames, List<String> counts, List<String> queries, List<String> treeQueries) {
+		int lastCount = DEFAULT_COUNT;
+		String lastQuery = DEFAULT_SEARCH_QUERY;
+		String lastTreeQuery = DEFAULT_TREE_QUERY;
+
+		List<TableConfiguration> tableConfigurations = new ArrayList<TableConfiguration>(jobNames.size());
+		for(int i = 0; i < jobNames.size(); i++) {
+			String jobName = jobNames.get(i);
+			if(counts.size() > i) {
+				lastCount = Integer.parseInt(counts.get(i));
+			}
+			if(queries.size() > i) {
+				lastQuery = queries.get(i);
+				if(lastQuery == null || lastQuery.isEmpty()) {
+					lastQuery = DEFAULT_SEARCH_QUERY;
+				}
+			}
+			if(treeQueries.size() > i) {
+				lastTreeQuery = treeQueries.get(i);
+				if(lastTreeQuery == null || lastTreeQuery.isEmpty()) {
+					lastTreeQuery = DEFAULT_TREE_QUERY;
+				}
+			}
+
+			TableConfiguration tableConfiguration = new TableConfiguration(jobName, lastCount, lastQuery, lastTreeQuery);
+			tableConfigurations.add(tableConfiguration);
+		}
+
+		return tableConfigurations;
 	}
 
 	/**
@@ -70,6 +120,7 @@ public class DownstreamDashboard extends View {
 			}
 		}
 
+		List<TableConfiguration> tableConfigurations = findTableConfigurations();
 		List<Table> result = new ArrayList<Table>(tableConfigurations.size());
 		for (TableConfiguration tableConfiguration : tableConfigurations) {
 			Table table = tables.get(tableConfiguration);
@@ -87,6 +138,29 @@ public class DownstreamDashboard extends View {
 		}
 
 		return result;
+	}
+
+	public String getJobNames() {
+		return jobNames;
+	}
+
+	public String getCounts() {
+		return counts;
+	}
+
+	public String getQueries() {
+		return queries;
+	}
+
+	public String getTreeQueries() {
+		return treeQueries;
+	}
+
+	public List<TableConfiguration> findTableConfigurations() {
+		if(tableConfigurations == null) {
+			tableConfigurations = populateTableConfigurations(split(getJobNames()), split(getCounts()), split(getQueries()), split(getTreeQueries()));
+		}
+		return tableConfigurations;
 	}
 
 

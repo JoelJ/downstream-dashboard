@@ -4,8 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.kohsuke.stapler.StaplerRequest;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Make it easier to get parameters from requests with default values if it doesn't exist.
