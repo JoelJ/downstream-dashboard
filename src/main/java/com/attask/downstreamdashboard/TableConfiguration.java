@@ -11,17 +11,24 @@ import org.kohsuke.stapler.export.ExportedBean;
  */
 @ExportedBean
 public class TableConfiguration {
+	private final String label;
 	private String jobName;
 	private final int count;
 	private final String query;
 	private final String treeQuery;
 
 	@DataBoundConstructor
-	public TableConfiguration(String jobName, int count, String query, String treeQuery) {
+	public TableConfiguration(String label, String jobName, int count, String query, String treeQuery) {
+		this.label = label;
 		this.jobName = jobName;
 		this.count = count;
 		this.query = query;
 		this.treeQuery = treeQuery;
+	}
+
+	@Exported
+	public String getLabel() {
+		return label;
 	}
 
 	@Exported

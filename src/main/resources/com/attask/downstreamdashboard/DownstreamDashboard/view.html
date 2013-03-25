@@ -1,6 +1,7 @@
 <div id="downstream-dashboard" ng-app="">
 	<div ng-controller="TableControl">
 		<div class="table" ng-repeat="table in data.tables">
+			<h1>{{table.label}}</h1>
 			<div ng-repeat="run in table.runs" class="row">
 				<div class="run {{run.result}} running-{{run.building}}">
 					<a href="{{run.url}}" class="fullDisplayName">{{run.fullDisplayName}}</a>

@@ -24,6 +24,7 @@ public class DownstreamDashboard extends View {
 	private static final int DEFAULT_COUNT = 5;
 	private static final String DEFAULT_SEARCH_QUERY = "projectName=${jobName}";
 
+	private String labels;
 	private String jobNames;
 	private String counts;
 	private String queries;
@@ -41,14 +42,16 @@ public class DownstreamDashboard extends View {
 	protected void submit(StaplerRequest request) throws IOException, ServletException, Descriptor.FormException {
 		// Don't set these until we successfully populate the configurations.
 		// This is to prevent it a bad submit from getting all the fields out of sync
+		String labels = RequestUtils.getParameter(request, "_.labels");
 		String jobNames = RequestUtils.getParameter(request, "_.jobNames");
 		String counts = RequestUtils.getParameter(request, "_.counts");
 		String queries = RequestUtils.getParameter(request, "_.queries");
 		String treeQueries = RequestUtils.getParameter(request, "_.treeQueries");
 
-		this.tableConfigurations = populateTableConfigurations(split(jobNames), split(counts), split(queries), split(treeQueries));
+		this.tableConfigurations = populateTableConfigurations(split(labels), split(jobNames), split(counts), split(queries), split(treeQueries));
 
 		// Success! Overwrite fields.
+		this.labels = labels;
 		this.jobNames = jobNames;
 		this.counts = counts;
 		this.queries = queries;
@@ -67,7 +70,7 @@ public class DownstreamDashboard extends View {
 		return result;
 	}
 
-	private List<TableConfiguration> populateTableConfigurations(List<String> jobNames, List<String> counts, List<String> queries, List<String> treeQueries) {
+	private List<TableConfiguration> populateTableConfigurations(List<String> labels, List<String> jobNames, List<String> counts, List<String> queries, List<String> treeQueries) {
 		int lastCount = DEFAULT_COUNT;
 		String lastQuery = DEFAULT_SEARCH_QUERY;
 		String lastTreeQuery = DEFAULT_TREE_QUERY;
@@ -75,6 +78,12 @@ public class DownstreamDashboard extends View {
 		List<TableConfiguration> tableConfigurations = new ArrayList<TableConfiguration>(jobNames.size());
 		for(int i = 0; i < jobNames.size(); i++) {
 			String jobName = jobNames.get(i);
+
+			String label = jobName;
+			if(labels.size() > i) {
+				label = labels.get(i);
+			}
+
 			if(counts.size() > i) {
 				lastCount = Integer.parseInt(counts.get(i));
 			}
@@ -91,7 +100,7 @@ public class DownstreamDashboard extends View {
 				}
 			}
 
-			TableConfiguration tableConfiguration = new TableConfiguration(jobName, lastCount, lastQuery, lastTreeQuery);
+			TableConfiguration tableConfiguration = new TableConfiguration(label, jobName, lastCount, lastQuery, lastTreeQuery);
 			tableConfigurations.add(tableConfiguration);
 		}
 
@@ -140,6 +149,10 @@ public class DownstreamDashboard extends View {
 		return result;
 	}
 
+	public String getLabels() {
+		return labels;
+	}
+
 	public String getJobNames() {
 		return jobNames;
 	}
@@ -158,7 +171,7 @@ public class DownstreamDashboard extends View {
 
 	public List<TableConfiguration> findTableConfigurations() {
 		if(tableConfigurations == null) {
-			tableConfigurations = populateTableConfigurations(split(getJobNames()), split(getCounts()), split(getQueries()), split(getTreeQueries()));
+			tableConfigurations = populateTableConfigurations(split(getLabels()), split(getJobNames()), split(getCounts()), split(getQueries()), split(getTreeQueries()));
 		}
 		return tableConfigurations;
 	}

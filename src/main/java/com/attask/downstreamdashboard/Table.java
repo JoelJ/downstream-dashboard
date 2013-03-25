@@ -22,12 +22,14 @@ public class Table {
 	@Nullable private volatile SearchMap searchMap;
 	@Nullable private WeakReference<AbstractProject> projectWeakReference;
 
+	@NotNull private final String label;
 	@NotNull private final String jobName;
 	@NotNull private final String query;
 	@NotNull private final String treeQuery;
 	private final int count;
 
 	public Table(@NotNull TableConfiguration tableConfiguration) {
+		this.label = tableConfiguration.getLabel();
 		this.jobName = tableConfiguration.getJobName();
 		this.count = tableConfiguration.getCount();
 		this.query = tableConfiguration.getQuery();
@@ -92,6 +94,11 @@ public class Table {
 		return result;
 	}
 
+	@Exported
+	@NotNull
+	public String getLabel() {
+		return label;
+	}
 
 	@Exported
 	@NotNull
