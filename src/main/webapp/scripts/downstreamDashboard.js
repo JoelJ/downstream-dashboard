@@ -39,7 +39,7 @@ function TableControl($scope, $http, $location) {
 					var downstreamBuild = run.downstreamBuilds[downstreamIndex];
 					$scope.normalizeActions(downstreamBuild);
 				}
-			} else if (action.failCount) {
+			} else if (action.failCount !== undefined) {
 				run.failCount = action.failCount;
 				run.totalCount = action.totalCount;
 				run.skipCount = action.skipCount;

@@ -31,6 +31,8 @@ public class DownstreamDashboard extends View {
 	private String treeQueries;
 	private transient List<TableConfiguration> tableConfigurations;
 
+	private String bg;
+
 	private transient volatile Map<TableConfiguration, Table> tables;
 
 	@DataBoundConstructor
@@ -56,6 +58,8 @@ public class DownstreamDashboard extends View {
 		this.counts = counts;
 		this.queries = queries;
 		this.treeQueries = treeQueries;
+
+		this.bg = RequestUtils.getParameter(request, "_.bg");
 	}
 
 	private static List<String> split(String toSplit) {
@@ -167,6 +171,10 @@ public class DownstreamDashboard extends View {
 
 	public String getTreeQueries() {
 		return treeQueries;
+	}
+
+	public String getBg() {
+		return bg;
 	}
 
 	public List<TableConfiguration> findTableConfigurations() {

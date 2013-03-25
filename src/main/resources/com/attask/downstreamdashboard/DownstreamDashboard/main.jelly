@@ -5,6 +5,9 @@
 	<script src="${rootURL}/plugin/downstream-dashboard/scripts/downstreamDashboard.js"><!--empty--></script>
 
 	<style>
+		#downstream-dashboard {
+			background-image: url('${it.bg}');
+		}
 		#downstream-dashboard .table .run.running-true .building-indicator {
 			background-image: url('${resURL}/images/16x16/clock.png');
 		}

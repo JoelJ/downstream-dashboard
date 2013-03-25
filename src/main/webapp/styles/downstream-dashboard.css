@@ -2,7 +2,6 @@
 	padding: 1px;
 
 	background-color: white;
-	background-image: url('http://images4.wikia.nocookie.net/__cb20100514134207/starwars/images/c/c3/MCQ-cloudcity.jpg');
 	background-attachment: fixed;
 	z-index: 1000;
 }
@@ -16,8 +15,8 @@
 	padding-left: 40px;
 	padding-right: 40px;
 
-	margin-top: 15px;
-	margin-bottom: 25px;
+	margin-top: 1px;
+	margin-bottom: 10px;
 	margin-left: auto;
 	margin-right: auto;
 	max-width: 80%;
@@ -166,7 +165,10 @@
 	position: absolute;
 	top: 5px;
 	right: 5px;
+	background-color: #777;
+	padding: 3px;
 	padding-right: 5px;
+	border-radius: 3px;
 }
 
 #viewList * {

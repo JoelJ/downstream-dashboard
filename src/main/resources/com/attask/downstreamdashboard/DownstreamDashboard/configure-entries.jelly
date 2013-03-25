@@ -14,4 +14,8 @@
 	<f:entry title="Tree Queries" field="treeQueries">
 		<f:textarea/>
 	</f:entry>
+
+	<f:entry title="Background Image" field="bg">
+		<f:textbox default="${rootURL}/plugin/downstream-dashboard/images/bg.jpg"/>
+	</f:entry>
 </j:jelly>
