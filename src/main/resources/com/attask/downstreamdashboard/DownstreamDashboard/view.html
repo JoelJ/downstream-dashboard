@@ -13,7 +13,7 @@
 					<i class="building-indicator"></i>
 				</div>
 				<div ng-repeat="downstream in run.downstreamBuilds"
-					 class="run {{downstream.result}} running-{{run.building}}">
+					 class="run {{downstream.result}} running-{{downstream.building}}">
 					<a href="{{downstream.url}}" class="fullDisplayName">{{downstream.fullDisplayName}}</a>
 					<a href="{{downstream.url}}{{downstream.urlName}}" class="failures failureCount{{downstream.failCount}}">
 						{{downstream.failCount}}
