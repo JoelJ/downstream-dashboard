@@ -9,6 +9,7 @@
 						{{run.failCount}}
 						<ng-pluralize count="run.failCount" when="{'0': 'failures', 'one': 'failure', 'other': 'failures'}" ></ng-pluralize>
 					</a>
+					<div ng-bind-html-unsafe="run.description" class="description"></div>
 					<i class="building-indicator"></i>
 				</div>
 				<div ng-repeat="downstream in run.downstreamBuilds"

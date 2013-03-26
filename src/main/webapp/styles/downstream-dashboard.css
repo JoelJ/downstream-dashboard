@@ -31,10 +31,14 @@
 	border: 1px solid black;
 	border-radius: 3px;
 	display: inline-block;
-	height: 50px;
-	padding: 4px;
+	padding: 6px 10px 10px 10px;
 	margin: 2px;
-	width: 120px;
+
+	overflow: hidden;
+	min-height: 50px;
+	width: 150px;
+
+	vertical-align: middle;
 }
 
 #downstream-dashboard .table .row {
@@ -63,6 +67,7 @@
 }
 
 #downstream-dashboard .table .run .fullDisplayName {
+	margin-bottom: 2px;
 	font-weight: 700;
 	text-decoration: underline;
 }
@@ -157,7 +162,7 @@
 }
 
 #downstream-dashboard .table .run .failureCount {
-	visibility: hidden;
+	display: none;
 }
 
 #downstream-dashboard #toolbar {
