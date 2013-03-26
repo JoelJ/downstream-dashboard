@@ -12,7 +12,7 @@ function TableControl($scope, $http, $location) {
 					if(table) {
 						for(var runIndex = table.runs.length - 1; runIndex >= 0; runIndex--) {
 							var run = table.runs[runIndex];
-							if(run.actions) {
+							if(run && run.actions) {
 								$scope.normalizeActions(run);
 							}
 						}
