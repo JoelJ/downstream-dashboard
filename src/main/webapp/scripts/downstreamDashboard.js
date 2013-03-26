@@ -1,7 +1,7 @@
 function TableControl($scope, $http, $location) {
 	$scope.loadTable = function() {
 		$scope.nextUpdate = null;
-		var query = "?depth=4" + ($location.url().replace('?', '&'));
+		var query = "?tree=" + $scope.treeQuery + ($location.url().replace('?', '&'));
 		var url = location.pathname + "api/json"+query;
 		console.log("requesting:", url);
 
@@ -65,6 +65,8 @@ function TableControl($scope, $http, $location) {
 			$scope.nextUpdate = null;
 		}
 	};
+
+	$scope.treeQuery = DOWNSTREAM_DASHBOARD.treeQuery;
 
 	$scope.loadTable();
 }

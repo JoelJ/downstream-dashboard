@@ -12,7 +12,7 @@
 		<f:textarea default="projectName=${jobName}"/>
 	</f:entry>
 	<f:entry title="Tree Queries" field="treeQueries">
-		<f:textarea/>
+		<f:textarea default="${it.defaultTreeQuery}"/>
 	</f:entry>
 
 	<f:entry title="Background Image" field="bg">

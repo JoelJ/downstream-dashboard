@@ -20,7 +20,34 @@ import java.util.*;
  */
 @ExportedBean
 public class DownstreamDashboard extends View {
-	private static final String DEFAULT_TREE_QUERY = " ";
+	private static final String DEFAULT_TREE_QUERY =
+			"tables[" +
+				"label," +
+				"runs[" +
+					"fullDisplayName," +
+					"description," +
+					"building," +
+					"result," +
+					"actions[" +
+						"failCount," +
+						"skipCount," +
+						"totalCount," +
+						"urlName," +
+						"downstreamBuilds[" +
+							"fullDisplayName," +
+							"description," +
+							"building," +
+							"result," +
+							"actions[" +
+								"failCount," +
+								"skipCount," +
+								"totalCount," +
+								"urlName" +
+							"]" +
+						"]" +
+					"]" +
+				"]" +
+			"]";
 	private static final int DEFAULT_COUNT = 5;
 	private static final String DEFAULT_SEARCH_QUERY = "projectName=${jobName}";
 
@@ -50,7 +77,7 @@ public class DownstreamDashboard extends View {
 		String queries = RequestUtils.getParameter(request, "_.queries");
 		String treeQueries = RequestUtils.getParameter(request, "_.treeQueries");
 
-		this.tableConfigurations = populateTableConfigurations(split(labels), split(jobNames), split(counts), split(queries), split(treeQueries));
+		this.tableConfigurations = populateTableConfigurations(split(labels), split(jobNames), split(counts), split(queries), treeQueries);
 
 		// Success! Overwrite fields.
 		this.labels = labels;
@@ -74,10 +101,9 @@ public class DownstreamDashboard extends View {
 		return result;
 	}
 
-	private List<TableConfiguration> populateTableConfigurations(List<String> labels, List<String> jobNames, List<String> counts, List<String> queries, List<String> treeQueries) {
+	private List<TableConfiguration> populateTableConfigurations(List<String> labels, List<String> jobNames, List<String> counts, List<String> queries, String treeQueries) {
 		int lastCount = DEFAULT_COUNT;
 		String lastQuery = DEFAULT_SEARCH_QUERY;
-		String lastTreeQuery = DEFAULT_TREE_QUERY;
 
 		List<TableConfiguration> tableConfigurations = new ArrayList<TableConfiguration>(jobNames.size());
 		for(int i = 0; i < jobNames.size(); i++) {
@@ -97,14 +123,8 @@ public class DownstreamDashboard extends View {
 					lastQuery = DEFAULT_SEARCH_QUERY;
 				}
 			}
-			if(treeQueries.size() > i) {
-				lastTreeQuery = treeQueries.get(i);
-				if(lastTreeQuery == null || lastTreeQuery.isEmpty()) {
-					lastTreeQuery = DEFAULT_TREE_QUERY;
-				}
-			}
 
-			TableConfiguration tableConfiguration = new TableConfiguration(label, jobName, lastCount, lastQuery, lastTreeQuery);
+			TableConfiguration tableConfiguration = new TableConfiguration(label, jobName, lastCount, lastQuery, treeQueries);
 			tableConfigurations.add(tableConfiguration);
 		}
 
@@ -179,7 +199,7 @@ public class DownstreamDashboard extends View {
 
 	public List<TableConfiguration> findTableConfigurations() {
 		if(tableConfigurations == null) {
-			tableConfigurations = populateTableConfigurations(split(getLabels()), split(getJobNames()), split(getCounts()), split(getQueries()), split(getTreeQueries()));
+			tableConfigurations = populateTableConfigurations(split(getLabels()), split(getJobNames()), split(getCounts()), split(getQueries()), getTreeQueries());
 		}
 		return tableConfigurations;
 	}
@@ -213,6 +233,11 @@ public class DownstreamDashboard extends View {
 	@Override
 	public Collection<TopLevelItem> getItems() {
 		return Collections.emptyList();
+	}
+
+	@Exported
+	public String getDefaultTreeQuery() {
+		return DEFAULT_TREE_QUERY;
 	}
 
 	@Extension

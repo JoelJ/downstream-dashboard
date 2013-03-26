@@ -3,6 +3,11 @@
 
 	<script src="${rootURL}/plugin/downstream-dashboard/scripts/angular.min.js"><!--empty--></script>
 	<script src="${rootURL}/plugin/downstream-dashboard/scripts/downstreamDashboard.js"><!--empty--></script>
+	<script>
+		DOWNSTREAM_DASHBOARD = {
+			treeQuery: '${it.treeQueries}'
+		};
+	</script>
 
 	<style>
 		#downstream-dashboard {
