@@ -28,6 +28,7 @@ public class DownstreamDashboard extends View {
 					"description," +
 					"building," +
 					"result," +
+					"url," +
 					"actions[" +
 						"failCount," +
 						"skipCount," +
@@ -38,6 +39,7 @@ public class DownstreamDashboard extends View {
 							"description," +
 							"building," +
 							"result," +
+							"url," +
 							"actions[" +
 								"failCount," +
 								"skipCount," +
