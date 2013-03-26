@@ -30,7 +30,9 @@ public class SearchMap {
 			if (buildIds != null) {
 				for (String buildId : buildIds) {
 					Run<?, ?> run = Run.fromExternalizableId(buildId);
-					result.add(run);
+					if(run != null) {
+						result.add(run);
+					}
 				}
 			}
 		}
